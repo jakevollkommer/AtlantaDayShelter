@@ -17,17 +17,22 @@ class ViewController: UIViewController {
     var wealth = 100
     var checkDay = Bool(true)
     var dayCounter = 0
-    var inventory = NSMutableArray()
+    //var inventory = NSMutableArray()
     var attainmentLimit = 0
     var minuteCounter = 0
     var hourCounter = 8
     var ampm = "AM"
+    var hasJob = false
+    var hasJob1 = false
+    var hasJob2 = false
+    var hasJob3 = false
     
     //Prices of buyable items
-    var storeItems: [String] = ["Shirt","Pants","Shoes","Socks","Tie","Blazer"]
-    var storePrices: [Int] = [15,35,20,2,5,60]
-    var itemNames: [String] = ["shirt","pair of pants","pair of shoes","pair of socks","tie","blazer"]
-    var itemsBought = 0
+    var storeItems = ["Shirt","Pants","Shoes","Socks","Tie","Blazer"]
+    var storePrices = [15,35,20,2,5,60]
+    var itemNames = ["shirt","pair of pants","pair of shoes","pair of socks","tie","blazer"]
+    var inventory: [String] = []
+    var myItems: [String] = []
     let shirtPrice = 15
     let pantsPrice = 35
     let shoesPrice = 20
@@ -41,26 +46,78 @@ class ViewController: UIViewController {
     
     var alertTitle = "Would you like to work?"
     
+    @IBAction func inventory(sender: AnyObject) {
+        
+    }
+    
     @IBAction func work(sender: UIButton) {
-        //ADD RNG TO THE JOB ATTAINMENT PROGRAM, CAN CHECK ONCE PER DAY
         if workSkill >= 100{
-            
+            if hasJob2 {
+                //work skill is 100+, ask for job 3
+                alertTitle = NSString(format:"Your work skill level is %d. You can apply for a new job!", workSkill) as String;
+                let askJob3 = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+                askJob3.addAction(UIAlertAction(title: "Yes!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.applyForJob()
+                }))
+                askJob3.addAction(UIAlertAction(title: "No, work my old job." , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.applyForJob()
+                }))
+                
+                self.presentViewController(askJob3, animated: true, completion: nil)
+            }
+            else {
+                //work job 3
+            }
         }
         else if workSkill >= 50 {
+            if hasJob1 {
+                //work skill is 50+, ask for job 2
+                alertTitle = NSString(format:"Your work skill level is %d. You can apply for a new job!", workSkill) as String;
+                let askJob2 = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+                askJob2.addAction(UIAlertAction(title: "Yes!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.applyForJob()
+                }))
+                askJob2.addAction(UIAlertAction(title: "No, work my old job." , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.applyForJob()
+                }))
+                
+                self.presentViewController(askJob2, animated: true, completion: nil)
+            }
+            else {
+                //work job 2
+            }
             
         }
         else if workSkill >= 10 {
-            
+            if !hasJob1 {
+                //work skill is 10+, ask for job 1
+                alertTitle = NSString(format:"Your work skill level is %d. You can apply for a new job!", workSkill) as String;
+                let askJob1 = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+                askJob1.addAction(UIAlertAction(title: "Yes!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.applyForJob()
+                }))
+                askJob1.addAction(UIAlertAction(title: "No, work my old job." , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.jobAttainmentProgram()
+                }))
+                
+                self.presentViewController(askJob1, animated: true, completion: nil)
+            }
+            else {
+                //work job 1
+            }
         }
         else {
             //work skill 0, ask for job attainment program
             alertTitle = NSString(format:"Your work skill level is %d. Would you like to do day labor?", workSkill) as String;
             let askForWork = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-            askForWork.addAction(UIAlertAction(title: "No. Try the job attainment program!", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+            askForWork.addAction(UIAlertAction(title: "No. Try the job attainment program!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                 self.jobAttainmentProgram()
             }))
+            askForWork.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler:nil))
+            
             self.presentViewController(askForWork, animated: true, completion: nil)
         }
+        
     }
 
     @IBAction func store(sender: AnyObject) {
@@ -68,60 +125,35 @@ class ViewController: UIViewController {
         //create the store and its initial items
         let storeInterface = UIAlertController(title: "What would you like to buy?", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         
-            //        var i = 0
-            //
-            //        for object in storeItems{
-            //            print(storeItems[i])
-            //            print(storePrices[i])
-            //            print(itemNames[i])
-            //            storeInterface.addAction(UIAlertAction(title: object as! String, style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-            //                self.buyItem(self.storePrices[i], itemName: self.itemNames[i])
-            //            }))
-            //            print("i is",i)
-            //            i++
-            //
-            //        }
-            storeInterface.addAction(UIAlertAction(title: "Shirt", style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.buyItem(self.shirtPrice, itemName: "shirt")
-            }))
-            storeInterface.addAction(UIAlertAction(title: "Pants", style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.buyItem(self.pantsPrice, itemName: "pair of pants")
-            }))
-            storeInterface.addAction(UIAlertAction(title: "Shoes", style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.buyItem(self.shoesPrice, itemName: "pair of shoes")
-            }))
-            storeInterface.addAction(UIAlertAction(title: "Socks", style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.buyItem(self.socksPrice, itemName: "pair of socks")
-            }))
-            storeInterface.addAction(UIAlertAction(title: "Tie", style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.buyItem(self.tiePrice, itemName: "tie")
-            }))
-            storeInterface.addAction(UIAlertAction(title: "Blazer", style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.buyItem(self.blazerPrice, itemName: "blazer")
-            }))
+                    var i = -1
+                    for object in storeItems{
+                        i++
+                        let myItem = itemNames[i]
+                        let myPrice = storePrices[i]
+                        let index = i
+                        
+                        storeInterface.addAction(UIAlertAction(title: object , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                            self.buyItem(myPrice, itemName: myItem, arrayIndex: index)
+                        }))
+            
+                    }
             storeInterface.addAction(UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive, handler: nil))
-        
 
         self.presentViewController(storeInterface, animated: true, completion: nil)
     }
     
-    func buyItem(itemPrice:NSInteger,itemName:NSString){
-        
-        storeItems.removeAtIndex(itemsBought)
-        storePrices.removeAtIndex(itemsBought)
-        itemNames.removeAtIndex(itemsBought)
-        
-        
-        print (storeItems)
+    func buyItem(itemPrice:NSInteger,itemName:NSString,arrayIndex:NSInteger){
         
         if wealth >= itemPrice{
             //if the user has enough money, buy the item
+            myItems.append(storeItems[arrayIndex])
+            storeItems.removeAtIndex(arrayIndex)
+            storePrices.removeAtIndex(arrayIndex)
+            itemNames.removeAtIndex(arrayIndex)
             wealth = wealth - itemPrice
             wealthLabel.text = NSString(format:"$ %d",wealth) as String
-            itemsBought++
-            inventory.addObject(itemName)
+            inventory.append(itemName as String)
             energy = energy - 10
-            print(itemName)
             let myMessage = NSString(format:"You've bought a stylish %@!", itemName) as String;
             let userBoughtItem = UIAlertController(title: myMessage, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             userBoughtItem.addAction(UIAlertAction(title: "Great!", style: UIAlertActionStyle.Destructive, handler: nil))
@@ -134,6 +166,36 @@ class ViewController: UIViewController {
         }
         //potentially add extra items to the store depending on what they've bought
         
+    }
+    func applyForJob() {
+        //check if player has clothes
+        if inventory == itemNames {
+            //You can get the job
+            if hasJob1 && !hasJob2 && !hasJob3 {
+                hasJob2 = true
+                hasJob1 = false
+                gotJob("second")
+            }
+            else if !hasJob1 && hasJob2 && !hasJob3 {
+                hasJob3 = true
+                hasJob2 = false
+                gotJob("third")
+            }
+            else {
+                hasJob1 = true
+                gotJob("first")
+            }
+        }
+        else {
+            let message = ("You didnt get the job. Try dressing nicer for your interview next time")
+            print(message)
+            
+        }
+    
+    }
+    func gotJob(job: NSString) {
+        let message = ("Congratulations! you now have your "+(job as String)+" job!")
+        print(message)
     }
     func addShelter(){
         shelterOptions.addAction(UIAlertAction(title: "Eat", style: .Default, handler: { action in
@@ -221,7 +283,7 @@ class ViewController: UIViewController {
         else {
             print("You already had 3 meals today.")
             let tooManyMeals = UIAlertController(title: "You've already had 3 meals today. Sorry!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            tooManyMeals.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:self.returnHome))
+            tooManyMeals.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:nil))
             self.presentViewController(tooManyMeals, animated: true, completion: nil)
         }
     }
@@ -247,22 +309,26 @@ class ViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let energyDrain = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
-        let hungerDrain = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
-        let dayProgression = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "checkDaytime", userInfo: nil, repeats: true)
-        let dayCountdown = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "checkDaytime", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
         wealthLabel.text = NSString(format:"$ %d", wealth) as String;
         healthLabel.text = NSString(format:"Health: %d", health) as String;
         energyLabel.text = NSString(format:"Energy: %d", energy) as String;
     }
     func jobAttainmentProgram(){
+        if hasJob {
+            workSkill++
+        }
+        else {
         if attainmentLimit == 0 {
-            let randomNum: Int = random() % 10
-            print(randomNum)
-            if randomNum >= 7 {
+            let randomNum = arc4random_uniform(10)
+                print(randomNum)
+            if randomNum >= 6 {
                 //Got into job attainment program
                 let programAccepted = UIAlertController(title: "Congratulations! We can help you get a job through our job attainment program!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                programAccepted.addAction(UIAlertAction(title: "Awesome!", style: UIAlertActionStyle.Destructive, handler:self.returnHome))
+                programAccepted.addAction(UIAlertAction(title: "Awesome!", style: UIAlertActionStyle.Destructive, handler:nil))
                 self.presentViewController(programAccepted, animated: true, completion: nil)
                 
                 //Get job
@@ -270,7 +336,7 @@ class ViewController: UIViewController {
             else {
                 //Did not get into job attainment program
                 let programFull = UIAlertController(title: "Sorry, we are unable to help you through the job attainment program at this time. Please try again tomorrow!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                programFull.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:self.returnHome))
+                programFull.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
                 self.presentViewController(programFull, animated: true, completion: nil)
                 attainmentLimit++
             }
@@ -278,10 +344,10 @@ class ViewController: UIViewController {
         else {
             //Reached limit for today
             let limitReached = UIAlertController(title: "You've already applied today. Try again tomorrow.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            limitReached.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:self.returnHome))
+            limitReached.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
             self.presentViewController(limitReached, animated: true, completion: nil)
         }
-        
+        }
     }
     override func shouldAutorotate() -> Bool {
         return true
