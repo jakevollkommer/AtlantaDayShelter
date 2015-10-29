@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     var workSkill = 0
     var health = 50
     var hunger = 0
-    var wealth = 100
+    var wealth = 0
     var checkDay = Bool(true)
     var dayCounter = 0
     //var inventory = NSMutableArray()
@@ -26,6 +26,8 @@ class ViewController: UIViewController {
     var hasJob1 = false
     var hasJob2 = false
     var hasJob3 = false
+    var moneyEarned = 0
+    var hoursWorked = 0
     
     //Prices of buyable items
     var storeItems = ["Shirt","Pants","Shoes","Socks","Tie","Blazer"]
@@ -33,6 +35,7 @@ class ViewController: UIViewController {
     var itemNames = ["shirt","pair of pants","pair of shoes","pair of socks","tie","blazer"]
     var inventory: [String] = []
     var myItems: [String] = []
+    var wages: [Int] = [10,15,17,25]
     let shirtPrice = 15
     let pantsPrice = 35
     let shoesPrice = 20
@@ -67,7 +70,7 @@ class ViewController: UIViewController {
             }
             else {
                 //work job 3
-                self.worked()
+                self.worked(wages[3])
             }
         }
         else if workSkill >= 50 {
@@ -86,7 +89,7 @@ class ViewController: UIViewController {
             }
             else {
                 //work job 2
-                self.worked()
+                self.worked(wages[2])
             }
             
         }
@@ -106,7 +109,7 @@ class ViewController: UIViewController {
             }
             else {
                 //work job 1
-                self.worked()
+                self.worked(wages[1])
             }
         }
         else {
@@ -114,6 +117,9 @@ class ViewController: UIViewController {
                 //work skill 0, ask for job attainment program
                 alertTitle = NSString(format:"Your work skill level is %d. Would you like to do day labor?", workSkill) as String;
                 let askForWork = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+                askForWork.addAction(UIAlertAction(title: "Yes" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.worked(7)
+                    }))
                 askForWork.addAction(UIAlertAction(title: "No. Try the job attainment program!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                     self.jobAttainmentProgram()
                 }))
@@ -126,16 +132,44 @@ class ViewController: UIViewController {
             }
         }
     }
-    func worked() {
+    func worked(wage: Int) {
         //You worked
-        energy = energy - 30
-        energyLabel.text = NSString(format: "%i", energy) as String
+        var message = NSString()
+        if wage != 7 {
+            moneyEarned = wage*2 + moneyEarned
+            message = "You work for two hours. You feel drained and a bit hungry."
+        }
+        else {
+            wealth = wealth + 7
+            wealthLabel.text = NSString(format: "$%i", wealth) as String
+            message = NSString(format: "You earn $%i per hour for your day labor.", wage) as String
+        }
+        //make alert to notify you worked. energy drained and you are hungry.
+        let youWorked = UIAlertController(title: message as String, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        youWorked.addAction(UIAlertAction(title: "Okay.", style: UIAlertActionStyle.Destructive, handler: nil))
+        self.presentViewController(youWorked, animated: true, completion: nil)
+        
+        hoursWorked = hoursWorked + 2
+        energy = energy - 20
+        energyLabel.text = NSString(format: "Energy: %i", energy) as String
         hunger = hunger + 20
-        hungerLabel.text = NSString(format: "%i", hunger) as String
+        hungerLabel.text = NSString(format: "Hunger: %i", hunger) as String
         hourCounter = hourCounter + 2
         self.setTime()
         workSkill++
-        workSkillLabel.text = NSString(format:"%i", workSkill) as String;
+        workSkillLabel.text = NSString(format:"Work skill: %i", workSkill) as String
+    }
+    
+    func payDay() {
+        //been 7 days, pay out money
+        wealth = wealth + moneyEarned
+        let theTitle = NSString(format: "A week of work has passed. You worked %i hours and earned $%i this week!",hoursWorked, moneyEarned)
+        wealthLabel.text = NSString(format: "$ %i", wealth) as String
+        let paid = UIAlertController(title: theTitle as String, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        paid.addAction(UIAlertAction(title: "Awesome!", style: UIAlertActionStyle.Destructive, handler: nil))
+        self.presentViewController(paid, animated: true, completion: nil)
+        moneyEarned = 0
+        hoursWorked = 0
     }
 
     @IBAction func store(sender: AnyObject) {
@@ -192,16 +226,16 @@ class ViewController: UIViewController {
             if hasJob1 && !hasJob2 && !hasJob3 {
                 hasJob2 = true
                 hasJob1 = false
-                gotJob("second")
+                gotJob("second", wage: wages[2])
             }
             else if !hasJob1 && hasJob2 && !hasJob3 {
                 hasJob3 = true
                 hasJob2 = false
-                gotJob("third")
+                gotJob("third", wage: wages[3])
             }
             else {
                 hasJob1 = true
-                gotJob("first")
+                gotJob("first", wage: wages[1])
             }
         }
         else {
@@ -212,9 +246,12 @@ class ViewController: UIViewController {
         }
     
     }
-    func gotJob(job: NSString) {
-        let message = ("Congratulations! you now have your "+(job as String)+" job!")
-        print(message)
+    func gotJob(job: NSString, wage: Int) {
+        let message = NSString(format: "You will now earn $%i per hour", wage) as String
+        let myTitle = "Congratulations! you now have your "+(job as String)+" job! "+(message)
+        let jobEarned = UIAlertController(title: myTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        jobEarned.addAction(UIAlertAction(title: "Sweet!", style: UIAlertActionStyle.Destructive, handler:nil))
+        self.presentViewController(jobEarned, animated: true, completion: nil)
     }
     func addShelter(){
         shelterOptions.addAction(UIAlertAction(title: "Eat", style: .Default, handler: { action in
@@ -286,7 +323,7 @@ class ViewController: UIViewController {
             let youAte = UIAlertController(title: "You eat. You are now less hungry, more healthy, and have more energy.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             youAte.addAction(UIAlertAction(title: "Great!", style: UIAlertActionStyle.Destructive, handler:nil))
             self.presentViewController(youAte, animated: true, completion: nil)
-        energy++
+        energy = energy + 30
         health++
         hunger = hunger - 30
             if hunger < 0 {
@@ -347,7 +384,7 @@ class ViewController: UIViewController {
                     checkDay = false
                     setDay()
                 }
-                self.worked()
+                self.worked(wages[0])
             }
             else {
                 let cantWork = UIAlertController(title: "You can't work at night time! Go to sleep!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -449,6 +486,10 @@ class ViewController: UIViewController {
         let daysPlayed = dayCounter/2
         daysPlayedLabel.text = NSString(format: "Days played: %i", daysPlayed) as String
         minuteCounter = minuteCounter + 10
+
+        if (daysPlayed%7 == 0) && (daysPlayed != 0) {
+            self.payDay()
+        }
         self.setTime()
         }
     func setTime() {
