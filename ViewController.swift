@@ -67,6 +67,7 @@ class ViewController: UIViewController {
             }
             else {
                 //work job 3
+                self.worked()
             }
         }
         else if workSkill >= 50 {
@@ -85,12 +86,13 @@ class ViewController: UIViewController {
             }
             else {
                 //work job 2
+                self.worked()
             }
             
         }
-        else if workSkill >= 10 {
+        else if workSkill >= 20 {
             if !hasJob1 {
-                //work skill is 10+, ask for job 1
+                //work skill is 20+, ask for job 1
                 alertTitle = NSString(format:"Your work skill level is %d. You can apply for a new job!", workSkill) as String;
                 let askJob1 = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
                 askJob1.addAction(UIAlertAction(title: "Yes!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
@@ -104,20 +106,36 @@ class ViewController: UIViewController {
             }
             else {
                 //work job 1
+                self.worked()
             }
         }
         else {
-            //work skill 0, ask for job attainment program
-            alertTitle = NSString(format:"Your work skill level is %d. Would you like to do day labor?", workSkill) as String;
-            let askForWork = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-            askForWork.addAction(UIAlertAction(title: "No. Try the job attainment program!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
-                self.jobAttainmentProgram()
-            }))
-            askForWork.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler:nil))
+            if !hasJob{
+                //work skill 0, ask for job attainment program
+                alertTitle = NSString(format:"Your work skill level is %d. Would you like to do day labor?", workSkill) as String;
+                let askForWork = UIAlertController(title: alertTitle, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+                askForWork.addAction(UIAlertAction(title: "No. Try the job attainment program!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                    self.jobAttainmentProgram()
+                }))
+                askForWork.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler:nil))
             
-            self.presentViewController(askForWork, animated: true, completion: nil)
+                self.presentViewController(askForWork, animated: true, completion: nil)
+            }
+            else {
+                self.jobAttainmentProgram()
+            }
         }
-        
+    }
+    func worked() {
+        //You worked
+        energy = energy - 30
+        energyLabel.text = NSString(format: "%i", energy) as String
+        hunger = hunger + 20
+        hungerLabel.text = NSString(format: "%i", hunger) as String
+        hourCounter = hourCounter + 2
+        self.setTime()
+        workSkill++
+        workSkillLabel.text = NSString(format:"%i", workSkill) as String;
     }
 
     @IBAction func store(sender: AnyObject) {
@@ -187,8 +205,9 @@ class ViewController: UIViewController {
             }
         }
         else {
-            let message = ("You didnt get the job. Try dressing nicer for your interview next time")
-            print(message)
+            let noJob = UIAlertController(title: "You didnt get the job. Try dressing nicer for your interview next time.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+            noJob.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+            self.presentViewController(noJob, animated: true, completion: nil)
             
         }
     
@@ -206,7 +225,6 @@ class ViewController: UIViewController {
                     let cantEat = UIAlertController(title: "You're not hungry!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
                     cantEat.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:self.returnHome))
                     self.presentViewController(cantEat, animated: true, completion: nil)
-                    
                 }
                 else{
                     //If the user is hungry, he may eat.
@@ -318,8 +336,24 @@ class ViewController: UIViewController {
         energyLabel.text = NSString(format:"Energy: %d", energy) as String;
     }
     func jobAttainmentProgram(){
+        
         if hasJob {
-            workSkill++
+            if checkDay {
+                //work takes 2 hours
+                if ampm == "PM" && hourCounter >= 6{
+                    let homeLate = UIAlertController(title: "You get home late. It is now night time.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                    homeLate.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                    self.presentViewController(homeLate, animated: true, completion: nil)
+                    checkDay = false
+                    setDay()
+                }
+                self.worked()
+            }
+            else {
+                let cantWork = UIAlertController(title: "You can't work at night time! Go to sleep!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                cantWork.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                self.presentViewController(cantWork, animated: true, completion: nil)
+                }
         }
         else {
         if attainmentLimit == 0 {
@@ -332,6 +366,7 @@ class ViewController: UIViewController {
                 self.presentViewController(programAccepted, animated: true, completion: nil)
                 
                 //Get job
+                hasJob = true
             }
             else {
                 //Did not get into job attainment program
@@ -362,7 +397,6 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
     func drainEnergy(){
         if energy > 0 {
             energy--
@@ -384,14 +418,18 @@ class ViewController: UIViewController {
         }
     }
     func checkDaytime(){
-        if dayCounter % 2 == 0{
+        if ampm == "AM"{
             checkDay = false
             dayCounter++
+            setDay()
         }
         else {
             checkDay = true
             dayCounter++
+            setDay()
         }
+    }
+    func setDay() {
         if checkDay {
             dayLabel.text = ("It is day time.")
             ampm = "AM"
@@ -405,9 +443,15 @@ class ViewController: UIViewController {
             minuteCounter = 0
         }
     }
+    @IBOutlet weak var daysPlayedLabel: UILabel!
     func countdownDay() {
         //make this countdown to night time. 12 hour day, starting at 8 am and ending at 8 pm. Make a day last 60 seconds perhaps.
+        let daysPlayed = dayCounter/2
+        daysPlayedLabel.text = NSString(format: "Days played: %i", daysPlayed) as String
         minuteCounter = minuteCounter + 10
+        self.setTime()
+        }
+    func setTime() {
         timeLabel.text = NSString(format: "%d:%d %@", hourCounter,minuteCounter, ampm) as String;
         if minuteCounter >= 60 {
             minuteCounter = 0
@@ -418,7 +462,7 @@ class ViewController: UIViewController {
             hourCounter = 1
             ampm = "PM"
         }
+
     }
-    
 }
 
