@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     var hasJob2 = false
     var hasJob3 = false
     var moneyEarned = 0
+    var daysPlayed = 0
     var hoursWorked = 0
     
     //Prices of buyable items
@@ -152,7 +153,7 @@ class ViewController: UIViewController {
         hoursWorked = hoursWorked + 2
         energy = energy - 20
         energyLabel.text = NSString(format: "Energy: %i", energy) as String
-        hunger = hunger + 20
+        hunger = hunger + 15
         hungerLabel.text = NSString(format: "Hunger: %i", hunger) as String
         hourCounter = hourCounter + 2
         self.setTime()
@@ -183,8 +184,9 @@ class ViewController: UIViewController {
                         let myItem = itemNames[i]
                         let myPrice = storePrices[i]
                         let index = i
+                        let myTitle = NSString(format: "%@ - $%i", object, myPrice) as String
                         
-                        storeInterface.addAction(UIAlertAction(title: object , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
+                        storeInterface.addAction(UIAlertAction(title: myTitle , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                             self.buyItem(myPrice, itemName: myItem, arrayIndex: index)
                         }))
             
@@ -345,6 +347,7 @@ class ViewController: UIViewController {
     func sleep() {
         //User sleeps
         print("You sleep.")
+        attainmentLimit = 0
         energy = 100
         health++
         mealCounter = 0
@@ -365,8 +368,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
-        NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
-        NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "checkDaytime", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(12, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
         NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
         wealthLabel.text = NSString(format:"$ %d", wealth) as String;
         healthLabel.text = NSString(format:"Health: %d", health) as String;
@@ -483,8 +485,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var daysPlayedLabel: UILabel!
     func countdownDay() {
         //make this countdown to night time. 12 hour day, starting at 8 am and ending at 8 pm. Make a day last 60 seconds perhaps.
-        let daysPlayed = dayCounter/2
-        daysPlayedLabel.text = NSString(format: "Days played: %i", daysPlayed) as String
+        daysPlayedLabel.text = NSString(format: "Days played: %i", dayCounter) as String
         minuteCounter = minuteCounter + 10
 
         if (daysPlayed%7 == 0) && (daysPlayed != 0) {
@@ -501,9 +502,20 @@ class ViewController: UIViewController {
         }
         if hourCounter >= 12 {
             hourCounter = 1
-            ampm = "PM"
+            if ampm == "PM"{
+                ampm = "AM"
+            }
+            else {
+                ampm = "PM"
+            }
         }
-
+        if hourCounter >= 8 && ampm == "PM" {
+            checkDay = false
+            dayLabel.text = ("It is night time.")
+        }
+        else {
+            dayLabel.text = ("It is day time.")
+        }
     }
 }
 
