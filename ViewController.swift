@@ -17,7 +17,6 @@ class ViewController: UIViewController {
     var wealth = 0
     var checkDay = Bool(true)
     var dayCounter = 0
-    //var inventory = NSMutableArray()
     var attainmentLimit = 0
     var minuteCounter = 0
     var hourCounter = 8
@@ -29,20 +28,15 @@ class ViewController: UIViewController {
     var moneyEarned = 0
     var daysPlayed = 0
     var hoursWorked = 0
+    var termsAccepted = false
     
     //Prices of buyable items
-    var storeItems = ["Shirt","Pants","Shoes","Socks","Tie","Blazer"]
-    var storePrices = [15,35,20,2,5,60]
-    var itemNames = ["shirt","pair of pants","pair of shoes","pair of socks","tie","blazer"]
+    var storeItems = ["Shirt","Pants","Shoes","Tie","Blazer","Food"]
+    var storePrices = [15,35,20,5,60,5]
+    var itemNames = ["shirt","pair of pants","pair of shoes","tie","blazer","food"]
     var inventory: [String] = []
     var myItems: [String] = []
     var wages: [Int] = [10,15,17,25]
-    let shirtPrice = 15
-    let pantsPrice = 35
-    let shoesPrice = 20
-    let socksPrice = 2
-    let tiePrice = 5
-    let blazerPrice = 60
     
     //Make Shelter's options
     var shelterOptions = UIAlertController(title: "What would you like to do here?", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -51,7 +45,12 @@ class ViewController: UIViewController {
     var alertTitle = "Would you like to work?"
     
     @IBAction func inventory(sender: AnyObject) {
+        //open inventory controller
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
+        let vc: InventoryViewController = storyboard.instantiateViewControllerWithIdentifier("InventoryView") as! InventoryViewController
+        
+        self.presentViewController(vc, animated: true, completion: nil)
     }
     
     @IBAction func work(sender: UIButton) {
@@ -199,7 +198,13 @@ class ViewController: UIViewController {
     func buyItem(itemPrice:NSInteger,itemName:NSString,arrayIndex:NSInteger){
         
         if wealth >= itemPrice{
-            //if the user has enough money, buy the item
+            //if the user has enough money, buy the item]
+            if itemName == "food" {
+                wealth = wealth - itemPrice
+                wealthLabel.text = NSString(format:"$ %d",wealth) as String
+                self.eat()
+            }
+            else {
             myItems.append(storeItems[arrayIndex])
             storeItems.removeAtIndex(arrayIndex)
             storePrices.removeAtIndex(arrayIndex)
@@ -212,6 +217,7 @@ class ViewController: UIViewController {
             let userBoughtItem = UIAlertController(title: myMessage, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             userBoughtItem.addAction(UIAlertAction(title: "Great!", style: UIAlertActionStyle.Destructive, handler: nil))
             self.presentViewController(userBoughtItem, animated: true, completion: nil)
+            }
         }
         else{
             let cantBuyItem = UIAlertController(title: "Sorry, you don't have enough to buy this item.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -267,7 +273,9 @@ class ViewController: UIViewController {
                 }
                 else{
                     //If the user is hungry, he may eat.
-                    self.eat()
+                    if self.mealCounter < 3{
+                        self.eat()
+                    }
                 }
             case .Cancel:
                 return
@@ -319,7 +327,6 @@ class ViewController: UIViewController {
         self.presentViewController(shelterOptions, animated: true, completion: nil)
     }
     func eat(){
-        if mealCounter < 3{
         //User eats
         print("You eat. You are now less hungry, more healthy, and have more energy.")
             let youAte = UIAlertController(title: "You eat. You are now less hungry, more healthy, and have more energy.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -330,7 +337,6 @@ class ViewController: UIViewController {
         hunger = hunger - 30
             if hunger < 0 {
                 hunger = 0
-            }
         //Change stats. Notify user.
         healthLabel.text = NSString(format:"Health: %d", health) as String;
         energyLabel.text = NSString(format:"Energy: %d", energy) as String;
@@ -359,6 +365,9 @@ class ViewController: UIViewController {
         youSlept.addAction(UIAlertAction(title: "Great!", style: UIAlertActionStyle.Destructive, handler:nil))
         self.presentViewController(youSlept, animated: true, completion: nil)
         self.checkDaytime()
+        if (dayCounter%7 == 0) && (dayCounter != 0) {
+            self.payDay()
+        }
     }
     
     //If the user can not eat/sleep, return to shelter's options
@@ -366,8 +375,9 @@ class ViewController: UIViewController {
         self.presentViewController(shelterOptions, animated: true, completion: nil)
     }
     override func viewDidLoad() {
+        
         super.viewDidLoad()
-        NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
         NSTimer.scheduledTimerWithTimeInterval(12, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
         NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
         wealthLabel.text = NSString(format:"$ %d", wealth) as String;
@@ -457,7 +467,7 @@ class ViewController: UIViewController {
         }
     }
     func checkDaytime(){
-        if ampm == "AM"{
+        if checkDay{
             checkDay = false
             dayCounter++
             setDay()
@@ -487,19 +497,16 @@ class ViewController: UIViewController {
         //make this countdown to night time. 12 hour day, starting at 8 am and ending at 8 pm. Make a day last 60 seconds perhaps.
         daysPlayedLabel.text = NSString(format: "Days played: %i", dayCounter) as String
         minuteCounter = minuteCounter + 10
-
-        if (daysPlayed%7 == 0) && (daysPlayed != 0) {
-            self.payDay()
-        }
         self.setTime()
         }
     func setTime() {
-        timeLabel.text = NSString(format: "%d:%d %@", hourCounter,minuteCounter, ampm) as String;
         if minuteCounter >= 60 {
             minuteCounter = 0
             hourCounter++
             timeLabel.text = NSString(format: "%d:%.02d %@", hourCounter,minuteCounter, ampm) as String;
         }
+        timeLabel.text = NSString(format: "%d:%.02d %@", hourCounter,minuteCounter, ampm) as String;
+
         if hourCounter >= 12 {
             hourCounter = 1
             if ampm == "PM"{
@@ -516,6 +523,8 @@ class ViewController: UIViewController {
         else {
             dayLabel.text = ("It is day time.")
         }
+        timeLabel.text = NSString(format: "%d:%.02d %@", hourCounter,minuteCounter, ampm) as String;
+
     }
 }
 
