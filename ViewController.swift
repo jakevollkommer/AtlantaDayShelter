@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     var storeItems = ["Shirt","Pants","Shoes","Tie","Blazer","Food"]
     var storePrices = [15,35,20,5,60,5]
     var itemNames = ["shirt","pair of pants","pair of shoes","tie","blazer","food"]
-    var inventory: [String] = []
+    var inventory = NSMutableArray()
     var myItems: [String] = []
     var wages: [Int] = [10,15,17,25]
     
@@ -49,7 +49,11 @@ class ViewController: UIViewController {
         let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
         let vc: InventoryViewController = storyboard.instantiateViewControllerWithIdentifier("InventoryView") as! InventoryViewController
-        
+        if inventory.count > 0 {
+        for i in 0...(inventory.count - 1) {
+            vc.inventoryArray[i] = inventory[i]
+        }
+        }
         self.presentViewController(vc, animated: true, completion: nil)
     }
     
@@ -211,7 +215,7 @@ class ViewController: UIViewController {
             itemNames.removeAtIndex(arrayIndex)
             wealth = wealth - itemPrice
             wealthLabel.text = NSString(format:"$ %d",wealth) as String
-            inventory.append(itemName as String)
+            inventory.addObject(itemName as String)
             energy = energy - 10
             let myMessage = NSString(format:"You've bought a stylish %@!", itemName) as String;
             let userBoughtItem = UIAlertController(title: myMessage, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
