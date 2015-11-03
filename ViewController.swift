@@ -9,6 +9,11 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    var energyDrain: NSTimer!
+    var hungerDrain: NSTimer!
+    var dayCountdown: NSTimer!
+
     var mealCounter = 0
     var energy = 100
     var workSkill = 0
@@ -29,13 +34,13 @@ class ViewController: UIViewController {
     var daysPlayed = 0
     var hoursWorked = 0
     var termsAccepted = false
+    var slept = true
     
     //Prices of buyable items
     var storeItems = ["Shirt","Pants","Shoes","Tie","Blazer","Food"]
     var storePrices = [15,35,20,5,60,5]
     var itemNames = ["shirt","pair of pants","pair of shoes","tie","blazer","food"]
     var inventory = NSMutableArray()
-    var myItems: [String] = []
     var wages: [Int] = [10,15,17,25]
     
     //Make Shelter's options
@@ -56,7 +61,59 @@ class ViewController: UIViewController {
         }
         self.presentViewController(vc, animated: true, completion: nil)
     }
-    
+    func resetVariables() {
+        mealCounter = 0
+        energy = 100
+        workSkill = 0
+        health = 50
+        hunger = 0
+        wealth = 0
+        checkDay = Bool(true)
+        dayCounter = 0
+        attainmentLimit = 0
+        minuteCounter = 0
+        hourCounter = 8
+        ampm = "AM"
+        hasJob = false
+        hasJob1 = false
+        hasJob2 = false
+        hasJob3 = false
+        moneyEarned = 0
+        daysPlayed = 0
+        hoursWorked = 0
+        termsAccepted = false
+        slept = true
+        
+        //Prices of buyable items
+        storeItems = ["Shirt","Pants","Shoes","Tie","Blazer","Food"]
+        itemNames = ["shirt","pair of pants","pair of shoes","tie","blazer","food"]
+        inventory = NSMutableArray()
+        
+        energyDrain!.fire()
+        hungerDrain!.fire()
+        dayCountdown!.fire()
+        
+        self.setLabels()
+    }
+    func setLabels(){
+        energyLabel.text = NSString(format: "Energy: %i", energy) as String
+        hungerLabel.text = NSString(format: "Hunger: %i", hunger) as String
+        workSkillLabel.text = NSString(format:"Work skill: %i", workSkill) as String
+        wealthLabel.text = NSString(format:"$ %i", wealth) as String
+        dayLabel.text = ("It is day time.")
+        daysPlayedLabel.text = NSString(format: "Days played: %i", dayCounter) as String
+    }
+    func startOver() {
+        print("You are dead")
+        energyDrain!.invalidate()
+        hungerDrain!.invalidate()
+        dayCountdown!.invalidate()
+        let startOver = UIAlertController(title: "Oh no! You were unable to survive.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        startOver.addAction(UIAlertAction(title: "Start over", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+            self.resetVariables()
+        }))
+        self.presentViewController(startOver, animated: true, completion: nil)
+    }
     @IBAction func work(sender: UIButton) {
         if workSkill >= 100{
             if hasJob2 {
@@ -137,6 +194,7 @@ class ViewController: UIViewController {
         }
     }
     func worked(wage: Int) {
+        if energy > 50 {
         //You worked
         var message = NSString()
         if wage != 7 {
@@ -146,7 +204,7 @@ class ViewController: UIViewController {
         else {
             wealth = wealth + 7
             wealthLabel.text = NSString(format: "$%i", wealth) as String
-            message = NSString(format: "You earn $%i per hour for your day labor.", wage) as String
+            message = NSString(format: "You earn $%i for your day labor.", wage) as String
         }
         //make alert to notify you worked. energy drained and you are hungry.
         let youWorked = UIAlertController(title: message as String, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -162,6 +220,13 @@ class ViewController: UIViewController {
         self.setTime()
         workSkill++
         workSkillLabel.text = NSString(format:"Work skill: %i", workSkill) as String
+        }
+        else {
+            //not enough energy to work
+            let cantWork = UIAlertController(title: "You don't have enough energy to work right now.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+            cantWork.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler: nil))
+            self.presentViewController(cantWork, animated: true, completion: nil)
+        }
     }
     
     func payDay() {
@@ -209,7 +274,6 @@ class ViewController: UIViewController {
                 self.eat()
             }
             else {
-            myItems.append(storeItems[arrayIndex])
             storeItems.removeAtIndex(arrayIndex)
             storePrices.removeAtIndex(arrayIndex)
             itemNames.removeAtIndex(arrayIndex)
@@ -341,21 +405,23 @@ class ViewController: UIViewController {
         hunger = hunger - 30
             if hunger < 0 {
                 hunger = 0
-        //Change stats. Notify user.
+            }
+                //Change stats. Notify user.
         healthLabel.text = NSString(format:"Health: %d", health) as String;
         energyLabel.text = NSString(format:"Energy: %d", energy) as String;
         hungerLabel.text = NSString(format:"Hunger: %d", hunger) as String;
         mealCounter++
-        }
-        else {
-            print("You already had 3 meals today.")
-            let tooManyMeals = UIAlertController(title: "You've already had 3 meals today. Sorry!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            tooManyMeals.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:nil))
-            self.presentViewController(tooManyMeals, animated: true, completion: nil)
-        }
+        
+        
+        print("You already had 3 meals today.")
+        let tooManyMeals = UIAlertController(title: "You've already had 3 meals today. Sorry!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        tooManyMeals.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:nil))
+        self.presentViewController(tooManyMeals, animated: true, completion: nil)
+        
     }
     func sleep() {
         //User sleeps
+        slept = true
         print("You sleep.")
         attainmentLimit = 0
         energy = 100
@@ -381,9 +447,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
-        NSTimer.scheduledTimerWithTimeInterval(12, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
+        energyDrain = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
+        hungerDrain = NSTimer.scheduledTimerWithTimeInterval(12, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
+        dayCountdown = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
         wealthLabel.text = NSString(format:"$ %d", wealth) as String;
         healthLabel.text = NSString(format:"Health: %d", health) as String;
         energyLabel.text = NSString(format:"Energy: %d", energy) as String;
@@ -456,7 +522,7 @@ class ViewController: UIViewController {
             energyLabel.text = NSString(format:"Energy: %d", energy) as String;
         }
         else {
-            print("You are dead")
+            self.startOver()
             return
         }
     }
@@ -466,7 +532,7 @@ class ViewController: UIViewController {
             hungerLabel.text = NSString(format:"Hunger: %d", hunger) as String;
         }
         else {
-            print("You are dead")
+            self.startOver()
             return
         }
     }
@@ -523,12 +589,39 @@ class ViewController: UIViewController {
         if hourCounter >= 8 && ampm == "PM" {
             checkDay = false
             dayLabel.text = ("It is night time.")
+            slept = false
         }
         else {
             dayLabel.text = ("It is day time.")
+            if !slept {
+                //you didn't sleep, consequence
+                energy = energy - 50
+                self.drainEnergy()
+                let didntSleep = UIAlertController(title: "Oh no! You forgot to sleep last night. You feel exhausted", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                didntSleep.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                self.presentViewController(didntSleep, animated: true, completion: nil)
+            }
         }
         timeLabel.text = NSString(format: "%d:%.02d %@", hourCounter,minuteCounter, ampm) as String;
+        if hunger >= 100 {
+            self.startOver()
+        }
 
+    }
+    @IBAction func findHome(sender: AnyObject) {
+        //check if player can get a residence
+        if health >= 100 && hunger <= 50 && wealth >= 2000 && energy >= 50 && hasJob3 {
+            //consider a switch statement
+            //can buy a place
+            
+            //figure out down payment and rent
+        }
+        else {
+            //cant buy appt yet
+            let cantBuy = UIAlertController(title: "You can't afford to pay for an appartment yet.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+            cantBuy.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+            self.presentViewController(cantBuy, animated: true, completion: nil)
+        }
     }
 }
 
