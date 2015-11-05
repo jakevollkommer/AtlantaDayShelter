@@ -613,8 +613,11 @@ class ViewController: UIViewController {
         if health >= 100 && hunger <= 50 && wealth >= 2000 && energy >= 50 && hasJob3 {
             //consider a switch statement
             //can buy a place
-            
+            let gotApt = UIAlertController(title: "You've done it! You found an apartment you can afford!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+            gotApt.addAction(UIAlertAction(title: "Hurray!", style: UIAlertActionStyle.Destructive, handler:nil))
+            self.presentViewController(gotApt, animated: true, completion: nil)
             //figure out down payment and rent
+            //present new view controller upon game completion
         }
         else {
             //cant buy appt yet
