@@ -610,7 +610,7 @@ class ViewController: UIViewController {
     }
     @IBAction func findHome(sender: AnyObject) {
         //check if player can get a residence
-        if health >= 100 && hunger <= 50 && wealth >= 2000 && energy >= 50 && hasJob3 {
+        if health >= 100 && hunger <= 50 && wealth >= 3000 && energy >= 50 && hasJob3 {
             //consider a switch statement
             //can buy a place
             let gotApt = UIAlertController(title: "You've done it! You found an apartment you can afford!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
