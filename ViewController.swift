@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  AtlantaDayShelter
+//  ShelterSurvivor
 //
 //  Created by Jake Vollkommer on 9/19/15.
 //  Copyright (c) 2015 Jake Vollkommer. All rights reserved.
