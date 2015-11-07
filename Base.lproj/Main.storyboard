@@ -11,7 +11,7 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController storyboardIdentifier="ViewController" id="vXZ-lx-hvc" customClass="ViewController" customModule="AtlantaDayShelter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="vXZ-lx-hvc" customClass="ViewController" customModule="ShelterSurvivor" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -31,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Health: 50" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOO-Ac-qcV">
-                                <rect key="frame" x="562" y="46" width="98" height="21"/>
+                                <rect key="frame" x="535" y="46" width="98" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="98" id="Xvu-uR-EEu"/>
                                     <constraint firstAttribute="height" constant="21" id="oBZ-nU-zZl"/>
@@ -41,7 +41,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hunger: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zpy-cF-nhV">
-                                <rect key="frame" x="562" y="64" width="105" height="21"/>
+                                <rect key="frame" x="535" y="64" width="105" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Kiz-2K-ZUA"/>
                                 </constraints>
@@ -50,7 +50,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRk-aw-ZbQ">
-                                <rect key="frame" x="562" y="28" width="105" height="21"/>
+                                <rect key="frame" x="535" y="28" width="105" height="21"/>
                                 <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="19"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -61,12 +61,6 @@
                                     <constraint firstAttribute="width" constant="186" id="cT4-Kn-xhO"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="GillSans-Bold" family="Gill Sans" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Work skill: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yCf-41-mh2">
-                                <rect key="frame" x="562" y="84" width="105" height="21"/>
-                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="19"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -103,6 +97,15 @@
                                     <action selector="home:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="oE6-Yd-oan"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Days played: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4C-cy-XQV">
+                                <rect key="frame" x="288" y="340" width="125" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="125" id="5fl-5x-lqY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="19"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EW3-oa-nc4">
                                 <rect key="frame" x="598" y="286" width="50" height="50"/>
                                 <state key="normal" image="apartment-50.png"/>
@@ -157,11 +160,8 @@
                                     <constraint firstAttribute="width" constant="30" id="sUJ-Zq-B8j"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Days played: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4C-cy-XQV">
-                                <rect key="frame" x="288" y="340" width="125" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="125" id="5fl-5x-lqY"/>
-                                </constraints>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Work skill: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yCf-41-mh2">
+                                <rect key="frame" x="535" y="84" width="128" height="21"/>
                                 <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="19"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -181,22 +181,22 @@
                             <constraint firstItem="yyw-XJ-Zc2" firstAttribute="bottom" secondItem="EW3-oa-nc4" secondAttribute="bottom" id="JFS-fl-0jN"/>
                             <constraint firstAttribute="trailingMargin" secondItem="EW3-oa-nc4" secondAttribute="trailing" constant="-1" id="Pdg-lm-dON"/>
                             <constraint firstItem="nvQ-00-c4K" firstAttribute="leading" secondItem="joX-Jc-dJy" secondAttribute="leading" id="QAS-S8-Xpr"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="DOO-Ac-qcV" secondAttribute="trailing" constant="-13" id="RRQ-yZ-7Sh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="DOO-Ac-qcV" secondAttribute="trailing" constant="14" id="RRQ-yZ-7Sh"/>
                             <constraint firstItem="jRk-aw-ZbQ" firstAttribute="firstBaseline" secondItem="Ljq-2P-8gL" secondAttribute="firstBaseline" id="St1-FW-lie"/>
                             <constraint firstItem="joX-Jc-dJy" firstAttribute="top" secondItem="nvQ-00-c4K" secondAttribute="bottom" constant="2" id="TQP-pQ-Txo"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="joX-Jc-dJy" secondAttribute="bottom" constant="14" id="YIb-z2-tc2"/>
                             <constraint firstItem="Ljq-2P-8gL" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="12" id="diG-IB-aCn"/>
                             <constraint firstItem="DOO-Ac-qcV" firstAttribute="leading" secondItem="zpy-cF-nhV" secondAttribute="leading" id="h1e-yR-d1l"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="h4C-cy-XQV" secondAttribute="bottom" constant="14" id="hWw-OB-h8Z"/>
-                            <constraint firstItem="yCf-41-mh2" firstAttribute="trailing" secondItem="eeS-ad-Mry" secondAttribute="trailing" constant="4" id="hZ3-se-XPd"/>
+                            <constraint firstItem="yCf-41-mh2" firstAttribute="trailing" secondItem="eeS-ad-Mry" secondAttribute="trailing" id="hZ3-se-XPd"/>
                             <constraint firstItem="zpy-cF-nhV" firstAttribute="leading" secondItem="yCf-41-mh2" secondAttribute="leading" id="mFK-W2-lhn"/>
                             <constraint firstItem="eeS-ad-Mry" firstAttribute="bottom" secondItem="2fi-mo-0CV" secondAttribute="top" id="qQc-c5-ZAS"/>
-                            <constraint firstAttribute="trailing" secondItem="zpy-cF-nhV" secondAttribute="trailing" id="riB-3G-j68"/>
+                            <constraint firstAttribute="trailing" secondItem="zpy-cF-nhV" secondAttribute="trailing" constant="27" id="riB-3G-j68"/>
                             <constraint firstItem="eeS-ad-Mry" firstAttribute="centerX" secondItem="EW3-oa-nc4" secondAttribute="centerX" id="tlD-T3-gbR"/>
                             <constraint firstItem="Ljq-2P-8gL" firstAttribute="leading" secondItem="nvQ-00-c4K" secondAttribute="leading" id="uAC-vC-myT"/>
                             <constraint firstItem="joX-Jc-dJy" firstAttribute="baseline" secondItem="h4C-cy-XQV" secondAttribute="firstBaseline" constant="-1" id="uNx-Hg-aih"/>
                             <constraint firstItem="zpy-cF-nhV" firstAttribute="top" secondItem="jRk-aw-ZbQ" secondAttribute="bottom" constant="15" id="yPX-Ul-VXd"/>
-                            <constraint firstItem="yCf-41-mh2" firstAttribute="trailing" secondItem="zpy-cF-nhV" secondAttribute="trailing" id="yxW-Go-Mec"/>
+                            <constraint firstItem="yCf-41-mh2" firstAttribute="trailing" secondItem="zpy-cF-nhV" secondAttribute="trailing" constant="23" id="yxW-Go-Mec"/>
                             <constraint firstItem="Ljq-2P-8gL" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" symbolic="YES" id="zWb-5e-WN9"/>
                         </constraints>
                     </view>
@@ -220,7 +220,7 @@
         <!--Inventory View Controller-->
         <scene sceneID="c9a-fo-nIU">
             <objects>
-                <viewController storyboardIdentifier="InventoryView" id="fv1-yf-3Fu" customClass="InventoryViewController" customModule="AtlantaDayShelter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InventoryView" id="fv1-yf-3Fu" customClass="InventoryViewController" customModule="ShelterSurvivor" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zip-n9-pZi"/>
                         <viewControllerLayoutGuide type="bottom" id="k7t-JX-aCi"/>
@@ -294,7 +294,7 @@
         <!--Application View Controller-->
         <scene sceneID="ZBj-63-e35">
             <objects>
-                <viewController storyboardIdentifier="ApplicationView" id="GxI-1k-KDq" customClass="ApplicationViewController" customModule="AtlantaDayShelter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ApplicationView" id="GxI-1k-KDq" customClass="ApplicationViewController" customModule="ShelterSurvivor" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="txG-5B-Q6I"/>
                         <viewControllerLayoutGuide type="bottom" id="EuF-bJ-ipL"/>
@@ -328,7 +328,7 @@
         <!--Rules View Controller-->
         <scene sceneID="OZD-mC-Nl2">
             <objects>
-                <viewController storyboardIdentifier="RulesView" id="c8O-fj-mwF" customClass="RulesViewController" customModule="AtlantaDayShelter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RulesView" id="c8O-fj-mwF" customClass="RulesViewController" customModule="ShelterSurvivor" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lxh-GE-a3Z"/>
                         <viewControllerLayoutGuide type="bottom" id="IiF-eL-ugY"/>

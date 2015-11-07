@@ -1,6 +1,6 @@
 //
 //  InventoryViewController.swift
-//  AtlantaDayShelter
+//  ShelterSurvivor
 //
 //  Created by Jake Vollkommer on 11/1/15.
 //  Copyright © 2015 Jake Vollkommer. All rights reserved.
