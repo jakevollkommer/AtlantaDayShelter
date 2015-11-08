@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     var health = 50
     var hunger = 0
     var wealth = 0
-    var checkDay = Bool(true)
+    var checkDay = true
     var dayCounter = 0
     var attainmentLimit = 0
     var minuteCounter = 0
@@ -41,6 +41,7 @@ class ViewController: UIViewController {
     var storeItems = ["Shirt","Pants","Shoes","Tie","Blazer","Food"]
     var storePrices = [15,35,20,5,60,5]
     var itemNames = ["shirt","pair of pants","pair of shoes","tie","blazer","food"]
+    var itemsNeeded = ["shirt","pair of pants","pair of shoes","tie","blazer"]
     var inventory = NSMutableArray()
     var wages: [Int] = [10,15,17,25]
     
@@ -69,7 +70,7 @@ class ViewController: UIViewController {
         health = 50
         hunger = 0
         wealth = 0
-        checkDay = Bool(true)
+        checkDay = true
         dayCounter = 0
         attainmentLimit = 0
         minuteCounter = 0
@@ -90,9 +91,9 @@ class ViewController: UIViewController {
         itemNames = ["shirt","pair of pants","pair of shoes","tie","blazer","food"]
         inventory = NSMutableArray()
         
-        energyDrain!.fire()
-        hungerDrain!.fire()
-        dayCountdown!.fire()
+        energyDrain = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "drainEnergy", userInfo: nil, repeats: true)
+        hungerDrain = NSTimer.scheduledTimerWithTimeInterval(12, target: self, selector: "drainHunger", userInfo: nil, repeats: true)
+        dayCountdown = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "countdownDay", userInfo: nil, repeats: true)
         
         self.setLabels()
     }
@@ -109,6 +110,10 @@ class ViewController: UIViewController {
         energyDrain!.invalidate()
         hungerDrain!.invalidate()
         dayCountdown!.invalidate()
+        energyDrain = nil
+        hungerDrain = nil
+        dayCountdown = nil
+
         let startOver = UIAlertController(title: "Oh no! You were unable to survive.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         startOver.addAction(UIAlertAction(title: "Start over", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
             self.resetVariables()
@@ -280,6 +285,7 @@ class ViewController: UIViewController {
             if itemName == "food" {
                 wealth = wealth - itemPrice
                 wealthLabel.text = NSString(format:"$ %d",wealth) as String
+                mealCounter--
                 self.eat()
             }
             else {
@@ -306,9 +312,8 @@ class ViewController: UIViewController {
     }
     func applyForJob() {
         //check if player has clothes
-        let itemsNeeded = NSMutableArray(array: itemNames)
-        itemsNeeded.removeObjectAtIndex(5)
-        if inventory == itemsNeeded {
+
+        if inventory.count == itemsNeeded.count {
             //You can get the job
             if hasJob1 && !hasJob2 && !hasJob3 {
                 hasJob2 = true
