@@ -105,7 +105,7 @@ class ViewController: UIViewController {
         dayLabel.text = ("It is day time.")
         daysPlayedLabel.text = NSString(format: "Days played: %i", dayCounter) as String
     }
-    func startOver() {
+    func startOver(cause: NSString) {
         print("You are dead")
         energyDrain!.invalidate()
         hungerDrain!.invalidate()
@@ -113,8 +113,10 @@ class ViewController: UIViewController {
         energyDrain = nil
         hungerDrain = nil
         dayCountdown = nil
-
-        let startOver = UIAlertController(title: "Oh no! You were unable to survive.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let myTitle = NSString(format: "Oh no! %@ You were unable to survive.", cause) as String
+        
+        let startOver = UIAlertController(title: myTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         startOver.addAction(UIAlertAction(title: "Start over", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
             self.resetVariables()
         }))
@@ -132,7 +134,9 @@ class ViewController: UIViewController {
                 askJob3.addAction(UIAlertAction(title: "No, work my old job." , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                     self.applyForJob()
                 }))
-                askJob3.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: nil))
+                askJob3.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 
                 self.presentViewController(askJob3, animated: true, completion: nil)
             }
@@ -152,7 +156,9 @@ class ViewController: UIViewController {
                 askJob2.addAction(UIAlertAction(title: "No, work my old job." , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                     self.applyForJob()
                 }))
-                askJob2.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: nil))
+                askJob2.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 self.presentViewController(askJob2, animated: true, completion: nil)
             }
             else {
@@ -172,7 +178,9 @@ class ViewController: UIViewController {
                 askJob1.addAction(UIAlertAction(title: "No, work my old job." , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                     self.jobAttainmentProgram()
                 }))
-                askJob1.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: nil))
+                askJob1.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 self.presentViewController(askJob1, animated: true, completion: nil)
             }
             else {
@@ -191,13 +199,25 @@ class ViewController: UIViewController {
                 askForWork.addAction(UIAlertAction(title: "No. Try the job attainment program!" , style: UIAlertActionStyle.Default, handler: { (alert :UIAlertAction!) -> Void in
                     self.jobAttainmentProgram()
                 }))
-                askForWork.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler:nil))
+                askForWork.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
             
                 self.presentViewController(askForWork, animated: true, completion: nil)
             }
             else {
                 self.jobAttainmentProgram()
             }
+        }
+    }
+    func checkForDeath() {
+        if hunger >= 100 {
+            print("hunger 100")
+            self.startOver("You got too hungry.")
+        }
+        else if energy <= 0 {
+            print("energy 0")
+            self.startOver("You ran out of energy.")
         }
     }
     func worked(wage: Int) {
@@ -215,7 +235,9 @@ class ViewController: UIViewController {
         }
         //make alert to notify you worked. energy drained and you are hungry.
         let youWorked = UIAlertController(title: message as String, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-        youWorked.addAction(UIAlertAction(title: "Okay.", style: UIAlertActionStyle.Destructive, handler: nil))
+            youWorked.addAction(UIAlertAction(title: "Okay.", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
         self.presentViewController(youWorked, animated: true, completion: nil)
         
         hoursWorked = hoursWorked + 2
@@ -230,7 +252,9 @@ class ViewController: UIViewController {
         else {
             //not enough energy to work
             let cantWork = UIAlertController(title: "You don't have enough energy to work right now.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            cantWork.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler: nil))
+            cantWork.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
             self.presentViewController(cantWork, animated: true, completion: nil)
         }
     }
@@ -250,7 +274,9 @@ class ViewController: UIViewController {
     }
     func payFee() {
         let fee = UIAlertController(title: "You pay your $100 fee to the shelter", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-        fee.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler: nil))
+        fee.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+            self.checkForDeath()
+        }))
         self.presentViewController(fee, animated: true, completion: nil)
         wealth = wealth - 100
         wealthLabel.text = NSString(format: "$ %i", wealth) as String
@@ -273,7 +299,9 @@ class ViewController: UIViewController {
                         }))
             
                     }
-            storeInterface.addAction(UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive, handler: nil))
+        storeInterface.addAction(UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+            self.checkForDeath()
+        }))
 
         self.presentViewController(storeInterface, animated: true, completion: nil)
     }
@@ -298,13 +326,17 @@ class ViewController: UIViewController {
             energy = energy - 10
             let myMessage = NSString(format:"You've bought a stylish %@!", itemName) as String;
             let userBoughtItem = UIAlertController(title: myMessage, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            userBoughtItem.addAction(UIAlertAction(title: "Great!", style: UIAlertActionStyle.Destructive, handler: nil))
+                userBoughtItem.addAction(UIAlertAction(title: "Great!", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
             self.presentViewController(userBoughtItem, animated: true, completion: nil)
             }
         }
         else{
             let cantBuyItem = UIAlertController(title: "Sorry, you don't have enough to buy this item.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            cantBuyItem.addAction(UIAlertAction(title: "Okay.", style: UIAlertActionStyle.Destructive, handler: nil))
+            cantBuyItem.addAction(UIAlertAction(title: "Okay.", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
                 self.presentViewController(cantBuyItem, animated: true, completion: nil)
         }
         //potentially add extra items to the store depending on what they've bought
@@ -332,7 +364,9 @@ class ViewController: UIViewController {
         }
         else {
             let noJob = UIAlertController(title: "You didnt get the job. Try dressing nicer for your interview next time.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            noJob.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+            noJob.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
             self.presentViewController(noJob, animated: true, completion: nil)
             
         }
@@ -342,7 +376,9 @@ class ViewController: UIViewController {
         let message = NSString(format: "You will now earn $%i per hour", wage) as String
         let myTitle = "Congratulations! you now have your "+(job as String)+" job! "+(message)
         let jobEarned = UIAlertController(title: myTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-        jobEarned.addAction(UIAlertAction(title: "Sweet!", style: UIAlertActionStyle.Destructive, handler:nil))
+        jobEarned.addAction(UIAlertAction(title: "Sweet!", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+            self.checkForDeath()
+        }))
         self.presentViewController(jobEarned, animated: true, completion: nil)
     }
     func addShelter(){
@@ -363,7 +399,7 @@ class ViewController: UIViewController {
                     else {
                         print("You already had 3 meals today.")
                         let tooManyMeals = UIAlertController(title: "You've already had 3 meals today. Sorry!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                        tooManyMeals.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:nil))
+                        tooManyMeals.addAction(UIAlertAction(title: "Okay, go back!", style: UIAlertActionStyle.Destructive, handler:self.returnHome))
                         self.presentViewController(tooManyMeals, animated: true, completion: nil)
                     }
                 }
@@ -396,7 +432,9 @@ class ViewController: UIViewController {
                 return
             }
         }))
-        shelterOptions.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: nil ))
+        shelterOptions.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: { (alert :UIAlertAction!) -> Void in
+            self.checkForDeath()
+        } ))
 
     }
     @IBOutlet weak var energyLabel: UILabel!
@@ -483,7 +521,9 @@ class ViewController: UIViewController {
                 //work takes 2 hours
                 if ampm == "PM" && hourCounter >= 6{
                     let homeLate = UIAlertController(title: "You get home late. It is now night time.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                    homeLate.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                    homeLate.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                        self.checkForDeath()
+                    }))
                     self.presentViewController(homeLate, animated: true, completion: nil)
                     checkDay = false
                     setDay()
@@ -492,7 +532,9 @@ class ViewController: UIViewController {
             }
             else {
                 let cantWork = UIAlertController(title: "You can't work at night time! Go to sleep!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                cantWork.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                cantWork.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 self.presentViewController(cantWork, animated: true, completion: nil)
                 }
         }
@@ -503,7 +545,9 @@ class ViewController: UIViewController {
             if randomNum >= 6 {
                 //Got into job attainment program
                 let programAccepted = UIAlertController(title: "Congratulations! We can help you get a job through our job attainment program!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                programAccepted.addAction(UIAlertAction(title: "Awesome!", style: UIAlertActionStyle.Destructive, handler:nil))
+                programAccepted.addAction(UIAlertAction(title: "Awesome!", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 self.presentViewController(programAccepted, animated: true, completion: nil)
                 
                 //Get job
@@ -512,7 +556,9 @@ class ViewController: UIViewController {
             else {
                 //Did not get into job attainment program
                 let programFull = UIAlertController(title: "Sorry, we are unable to help you through the job attainment program at this time. Please try again tomorrow!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                programFull.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                programFull.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 self.presentViewController(programFull, animated: true, completion: nil)
                 attainmentLimit++
             }
@@ -520,7 +566,9 @@ class ViewController: UIViewController {
         else {
             //Reached limit for today
             let limitReached = UIAlertController(title: "You've already applied today. Try again tomorrow.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            limitReached.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+            limitReached.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
             self.presentViewController(limitReached, animated: true, completion: nil)
         }
         }
@@ -543,21 +591,11 @@ class ViewController: UIViewController {
             energy--
             energyLabel.text = NSString(format:"Energy: %d", energy) as String;
         }
-        else {
-            print("energy 0")
-            self.startOver()
-            return
-        }
     }
     func drainHunger(){
         if hunger < 100 {
             hunger = hunger + 10
             hungerLabel.text = NSString(format:"Hunger: %d", hunger) as String;
-        }
-        else {
-            print("hunger 100")
-            self.startOver()
-            return
         }
     }
     func checkDaytime(){
@@ -628,15 +666,13 @@ class ViewController: UIViewController {
                 energy = energy - 50
                 self.drainEnergy()
                 let didntSleep = UIAlertController(title: "Oh no! You forgot to sleep last night. You feel exhausted", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-                didntSleep.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+                didntSleep.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                    self.checkForDeath()
+                }))
                 self.presentViewController(didntSleep, animated: true, completion: nil)
             }
         }
         timeLabel.text = NSString(format: "%d:%.02d %@", hourCounter,minuteCounter, ampm) as String;
-        if hunger >= 100 {
-            print("hunger 100")
-            self.startOver()
-        }
 
     }
     @IBAction func findHome(sender: AnyObject) {
@@ -645,7 +681,9 @@ class ViewController: UIViewController {
             //consider a switch statement
             //can buy a place
             let gotApt = UIAlertController(title: "You've done it! You found an apartment you can afford!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            gotApt.addAction(UIAlertAction(title: "Hurray!", style: UIAlertActionStyle.Destructive, handler:nil))
+            gotApt.addAction(UIAlertAction(title: "Hurray!", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
             self.presentViewController(gotApt, animated: true, completion: nil)
             //figure out down payment and rent
             //present new view controller upon game completion
@@ -653,7 +691,9 @@ class ViewController: UIViewController {
         else {
             //cant buy appt yet
             let cantBuy = UIAlertController(title: "You can't afford to pay for an appartment yet.", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            cantBuy.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:nil))
+            cantBuy.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Destructive, handler:{ (alert :UIAlertAction!) -> Void in
+                self.checkForDeath()
+            }))
             self.presentViewController(cantBuy, animated: true, completion: nil)
         }
     }
