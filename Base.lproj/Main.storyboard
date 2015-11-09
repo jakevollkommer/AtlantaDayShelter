@@ -107,7 +107,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EW3-oa-nc4">
-                                <rect key="frame" x="598" y="286" width="50" height="50"/>
+                                <rect key="frame" x="574" y="286" width="50" height="50"/>
                                 <state key="normal" image="apartment-50.png"/>
                                 <connections>
                                     <action selector="findHome:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ASp-bI-j35"/>
@@ -145,7 +145,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Look for apartment" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeS-ad-Mry">
-                                <rect key="frame" x="583" y="329" width="80" height="46"/>
+                                <rect key="frame" x="559" y="329" width="80" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="46" id="W41-8M-Xnh"/>
                                 </constraints>
@@ -179,7 +179,7 @@
                             <constraint firstItem="yyw-XJ-Zc2" firstAttribute="leading" secondItem="nvQ-00-c4K" secondAttribute="trailing" constant="12" id="IlV-57-Hmn"/>
                             <constraint firstItem="jRk-aw-ZbQ" firstAttribute="baseline" secondItem="Ljq-2P-8gL" secondAttribute="baseline" id="IxJ-Jt-GbU"/>
                             <constraint firstItem="yyw-XJ-Zc2" firstAttribute="bottom" secondItem="EW3-oa-nc4" secondAttribute="bottom" id="JFS-fl-0jN"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="EW3-oa-nc4" secondAttribute="trailing" constant="-1" id="Pdg-lm-dON"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="EW3-oa-nc4" secondAttribute="trailing" constant="23" id="Pdg-lm-dON"/>
                             <constraint firstItem="nvQ-00-c4K" firstAttribute="leading" secondItem="joX-Jc-dJy" secondAttribute="leading" id="QAS-S8-Xpr"/>
                             <constraint firstAttribute="trailingMargin" secondItem="DOO-Ac-qcV" secondAttribute="trailing" constant="14" id="RRQ-yZ-7Sh"/>
                             <constraint firstItem="jRk-aw-ZbQ" firstAttribute="firstBaseline" secondItem="Ljq-2P-8gL" secondAttribute="firstBaseline" id="St1-FW-lie"/>
@@ -188,7 +188,7 @@
                             <constraint firstItem="Ljq-2P-8gL" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="12" id="diG-IB-aCn"/>
                             <constraint firstItem="DOO-Ac-qcV" firstAttribute="leading" secondItem="zpy-cF-nhV" secondAttribute="leading" id="h1e-yR-d1l"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="h4C-cy-XQV" secondAttribute="bottom" constant="14" id="hWw-OB-h8Z"/>
-                            <constraint firstItem="yCf-41-mh2" firstAttribute="trailing" secondItem="eeS-ad-Mry" secondAttribute="trailing" id="hZ3-se-XPd"/>
+                            <constraint firstItem="yCf-41-mh2" firstAttribute="trailing" secondItem="eeS-ad-Mry" secondAttribute="trailing" constant="24" id="hZ3-se-XPd"/>
                             <constraint firstItem="zpy-cF-nhV" firstAttribute="leading" secondItem="yCf-41-mh2" secondAttribute="leading" id="mFK-W2-lhn"/>
                             <constraint firstItem="eeS-ad-Mry" firstAttribute="bottom" secondItem="2fi-mo-0CV" secondAttribute="top" id="qQc-c5-ZAS"/>
                             <constraint firstAttribute="trailing" secondItem="zpy-cF-nhV" secondAttribute="trailing" constant="27" id="riB-3G-j68"/>
